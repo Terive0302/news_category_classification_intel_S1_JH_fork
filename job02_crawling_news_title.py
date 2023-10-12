@@ -1,52 +1,12 @@
-# from selenium import webdriver
-#
-# from os import path
-#
-# from selenium.common.exceptions import NoSuchDriverException
-# from selenium.webdriver.common.options import BaseOptions
-# from selenium.webdriver.common.selenium_manager import SeleniumManager
-# from selenium.webdriver.common.service import Service
-#
-# from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
-# import pandas as pd
-# from selenium.webdriver.chromium.webdriver import ChromiumDriver
-# from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-#
-# from selenium.webdriver.chrome.service import Service as ChromeService
-# from selenium.webdriver.chrome.options import Options as ChromeOptions
-# from webdriver_manager.chrome import ChromeDriverManager
-#
-#
-#
-# import re
-#
-# import time
-#
-# import datetime
-#
-# url='https://news.naver.com/main/main.naver?mode=LSD&mid=shm&sid1=100#&date=%2000:00:00&page=1'
-#
-# options=ChromeOptions()
-#
-# user_agent=
-#
-# options.add_argument('lang=ko_KR')
-#
-# #path = SeleniumManager().driver_location(options) if path is None else path
-#
-# #driver=webdriver.Chrome(service='./chromewebdriver',options='option')
-#
-# driver.get(url)
-import re
-import time
-import datetime
-
-import pandas
-import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
+import pandas as pd
+import re
+import time
+import datetime
 
 options = ChromeOptions()
 user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
@@ -62,13 +22,11 @@ service = ChromeService(executable_path=ChromeDriverManager().install())
 
 url='https://news.naver.com/main/main.naver?mode=LSD&mid=shm&sid1=100#&date=%2000:00:00&page=1'
 
-category=['Politics','Economic','Social','Culture','World','IT']
-
 # chrome driver
 driver = webdriver.Chrome(service=service, options=options)  # <- options로 변경
 driver.get(url)
 
-titles=[]
+category=['Politics','Economic','Social','Culture','World','IT']
 pages=[110,110,110,75,110,72]
 df_titles=pd.DataFrame()
 
@@ -88,9 +46,9 @@ for l in range(1, 2):
                     title = re.compile('[^가-힣]').sub(' ', title)
                     titles.append(title)
                 except:
-                    print('error {} {} {} {}'.format(l,k,i,j))
-        if k%10 == 0:
-            df_section_title = pandas.DataFrame(titles, columns = ['titles'])
+                    print('error {} {} {} {}'.format(l, k, i, j))
+        if k % 10 == 0:
+            df_section_title = pd.DataFrame(titles, columns = ['titles'])
             df_section_title['category'] = category[l]
             # df_titles=pd.concat([df_titles,df_section_title],ignore_index=True)
             # df_titles.to_csv('./crawling_data/crawling_data_{}_{}.csv'.format(l,k),index=False)
@@ -106,12 +64,12 @@ driver.close()
    # titles = []
 
 
-print(df_titles.head())
-df_titles.info()
-
-cnt=df_section_title['category'].value_counts()
-
-print(cnt)
+# print(df_titles.head())
+# df_titles.info()
+#
+# cnt=df_section_title['category'].value_counts()
+#
+# print(cnt)
 #print(title)
 
 # //*[@id="section_body"]/ul[1]/li[1]/dl/dt[2]/a
